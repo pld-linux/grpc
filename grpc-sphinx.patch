@@ -1,0 +1,11 @@
+--- grpc-1.30.0/setup.py.orig	2020-07-03 19:40:19.151045702 +0200
++++ grpc-1.30.0/setup.py	2020-07-03 20:39:55.781669431 +0200
+@@ -363,7 +363,7 @@
+ )
+ 
+ SETUP_REQUIRES = INSTALL_REQUIRES + (
+-    'Sphinx~=1.8.1',
++    'Sphinx>=1.8.1',
+     'six>=1.10',
+ ) if ENABLE_DOCUMENTATION_BUILD else ()
+ 

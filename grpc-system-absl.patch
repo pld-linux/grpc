@@ -1,0 +1,22 @@
+--- grpc-1.30.0/setup.py.orig	2020-06-22 23:04:32.000000000 +0200
++++ grpc-1.30.0/setup.py	2020-06-28 21:44:21.517738390 +0200
+@@ -116,6 +116,8 @@
+ BUILD_WITH_SYSTEM_CARES = os.environ.get('GRPC_PYTHON_BUILD_SYSTEM_CARES',
+                                          False)
+ 
++BUILD_WITH_SYSTEM_ABSL = os.environ.get('GRPC_PYTHON_BUILD_SYSTEM_ABSL', False)
++
+ # For local development use only: This skips building gRPC Core and its
+ # dependencies, including protobuf and boringssl. This allows "incremental"
+ # compilation by first building gRPC Core using make, then building only the
+@@ -230,6 +232,10 @@
+     CORE_C_FILES = filter(lambda x: 'third_party/cares' not in x, CORE_C_FILES)
+     CARES_INCLUDE = (os.path.join('/usr', 'include'),)
+ 
++if BUILD_WITH_SYSTEM_ABSL:
++    CORE_C_FILES = filter(lambda x: 'third_party/abseil-cpp' not in x, CORE_C_FILES)
++    ABSL_INCLUDE = (os.path.join('/usr', 'include'),)
++
+ EXTENSION_INCLUDE_DIRECTORIES = ((PYTHON_STEM,) + CORE_INCLUDE + ABSL_INCLUDE +
+                                  ADDRESS_SORTING_INCLUDE + CARES_INCLUDE +
+                                  SSL_INCLUDE + UPB_INCLUDE +

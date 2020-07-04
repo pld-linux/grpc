@@ -19,13 +19,15 @@ Source0:	https://github.com/grpc/grpc/archive/v%{version}/%{name}-%{version}.tar
 # Source0-md5:	316b30c89b48b8ae0ad005bb12ac566a
 Patch0:		%{name}-system-absl.patch
 Patch1:		%{name}-sphinx.patch
+Patch2:		%{name}-x32.patch
+Patch3:		%{name}-libdir.patch
 URL:		https://grpc.io/
 BuildRequires:	abseil-cpp-devel
 BuildRequires:	c-ares-devel >= 1.13.0
 BuildRequires:	cmake >= 3.5.1
 BuildRequires:	libstdc++-devel >= 6:4.7
 BuildRequires:	openssl-devel
-BuildRequires:	protobuf-devel
+BuildRequires:	protobuf-devel >= 3.12
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.714
 BuildRequires:	zlib-devel
@@ -136,6 +138,8 @@ Dokumentacja API biblioteki Pythona gRPC.
 %setup -q
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
+%patch3 -p1
 
 %build
 install -d build

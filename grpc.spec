@@ -10,17 +10,18 @@
 Summary:	RPC library and framework
 Summary(pl.UTF-8):	Biblioteka i szkielet RPC
 Name:		grpc
-Version:	1.30.0
+Version:	1.32.0
 Release:	1
 License:	Apache v2.0
 Group:		Libraries
 #Source0Download: https://github.com/grpc/grpc/releases
 Source0:	https://github.com/grpc/grpc/archive/v%{version}/%{name}-%{version}.tar.gz
-# Source0-md5:	316b30c89b48b8ae0ad005bb12ac566a
+# Source0-md5:	e2afa783e763d5f6bc09b664b907ff25
 Patch0:		%{name}-system-absl.patch
 Patch1:		%{name}-sphinx.patch
 Patch2:		%{name}-x32.patch
 Patch3:		%{name}-libdir.patch
+Patch4:		%{name}-system-re2.patch
 URL:		https://grpc.io/
 BuildRequires:	abseil-cpp-devel
 BuildRequires:	c-ares-devel >= 1.13.0
@@ -140,6 +141,7 @@ Dokumentacja API biblioteki Pythona gRPC.
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
+%patch4 -p1
 
 %build
 install -d build
@@ -150,6 +152,7 @@ cd build
 	-DgRPC_ABSL_PROVIDER=package \
 	-DgRPC_CARES_PROVIDER=package \
 	-DgRPC_PROTOBUF_PROVIDER=package \
+	-DgRPC_RE2_PROVIDER=package \
 	-DgRPC_SSL_PROVIDER=package \
 	-DgRPC_ZLIB_PROVIDER=package
 
@@ -159,6 +162,7 @@ cd ..
 export GRPC_PYTHON_BUILD_SYSTEM_ABSL=1
 export GRPC_PYTHON_BUILD_SYSTEM_CARES=1
 export GRPC_PYTHON_BUILD_SYSTEM_OPENSSL=1
+export GRPC_PYTHON_BUILD_SYSTEM_RE2=1
 export GRPC_PYTHON_BUILD_SYSTEM_ZLIB=1
 
 %if %{with python2}
@@ -185,6 +189,7 @@ rm -rf $RPM_BUILD_ROOT
 export GRPC_PYTHON_BUILD_SYSTEM_ABSL=1
 export GRPC_PYTHON_BUILD_SYSTEM_CARES=1
 export GRPC_PYTHON_BUILD_SYSTEM_OPENSSL=1
+export GRPC_PYTHON_BUILD_SYSTEM_RE2=1
 export GRPC_PYTHON_BUILD_SYSTEM_ZLIB=1
 
 %if %{with python2}
@@ -218,13 +223,13 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/grpc_python_plugin
 %attr(755,root,root) %{_bindir}/grpc_ruby_plugin
 %attr(755,root,root) %{_libdir}/libgpr.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libgpr.so.10
+%attr(755,root,root) %ghost %{_libdir}/libgpr.so.12
 %attr(755,root,root) %{_libdir}/libgrpc.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libgrpc.so.10
+%attr(755,root,root) %ghost %{_libdir}/libgrpc.so.12
 %attr(755,root,root) %{_libdir}/libgrpc_plugin_support.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libgrpc_plugin_support.so.1
 %attr(755,root,root) %{_libdir}/libgrpc_unsecure.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libgrpc_unsecure.so.10
+%attr(755,root,root) %ghost %{_libdir}/libgrpc_unsecure.so.12
 %attr(755,root,root) %{_libdir}/libgrpc++.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libgrpc++.so.1
 %attr(755,root,root) %{_libdir}/libgrpc++_alts.so.*.*.*
@@ -239,9 +244,9 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %ghost %{_libdir}/libgrpcpp_channelz.so.1
 # TODO: use system libs instead
 %attr(755,root,root) %{_libdir}/libaddress_sorting.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libaddress_sorting.so.10
+%attr(755,root,root) %ghost %{_libdir}/libaddress_sorting.so.12
 %attr(755,root,root) %{_libdir}/libupb.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libupb.so.10
+%attr(755,root,root) %ghost %{_libdir}/libupb.so.12
 %{_datadir}/grpc
 
 %files devel
@@ -282,6 +287,7 @@ rm -rf $RPM_BUILD_ROOT
 %{py_sitedir}/grpc/_cython/__init__.py[co]
 %{py_sitedir}/grpc/_cython/_credentials
 %{py_sitedir}/grpc/_cython/_cygrpc
+%{py_sitedir}/grpc/aio
 %{py_sitedir}/grpc/beta
 %{py_sitedir}/grpc/experimental
 %{py_sitedir}/grpc/framework
@@ -300,6 +306,7 @@ rm -rf $RPM_BUILD_ROOT
 %{py3_sitedir}/grpc/_cython/__pycache__
 %{py3_sitedir}/grpc/_cython/_credentials
 %{py3_sitedir}/grpc/_cython/_cygrpc
+%{py3_sitedir}/grpc/aio
 %{py3_sitedir}/grpc/beta
 %{py3_sitedir}/grpc/experimental
 %{py3_sitedir}/grpc/framework

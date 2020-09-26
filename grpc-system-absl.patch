@@ -20,3 +20,20 @@
  EXTENSION_INCLUDE_DIRECTORIES = ((PYTHON_STEM,) + CORE_INCLUDE + ABSL_INCLUDE +
                                   ADDRESS_SORTING_INCLUDE + CARES_INCLUDE +
                                   SSL_INCLUDE + UPB_INCLUDE +
+@@ -285,6 +285,16 @@
+     EXTENSION_LIBRARIES += ('z',)
+ if BUILD_WITH_SYSTEM_CARES:
+     EXTENSION_LIBRARIES += ('cares',)
++if BUILD_WITH_SYSTEM_ABSL:
++    EXTENSION_LIBRARIES += ('absl_base', 'absl_exponential_biased', 'absl_malloc_internal',
++                            'absl_raw_logging_internal', 'absl_spinlock_wait', 'absl_throw_delegate',
++                            'absl_log_severity', 'absl_hashtablez_sampler', 'absl_raw_hash_set',
++                            'absl_debugging_internal', 'absl_demangle_internal', 'absl_stacktrace',
++                            'absl_symbolize', 'absl_city', 'absl_hash', 'absl_int128', 'absl_status',
++                            'absl_strings', 'absl_cord', 'absl_strings_internal',
++                            'absl_str_format_internal', 'absl_synchronization', 'absl_time',
++                            'absl_civil_time', 'absl_time_zone', 'absl_bad_optional_access',
++                            'absl_bad_variant_access')
+ 
+ DEFINE_MACROS = (('_WIN32_WINNT', 0x600),)
+ asm_files = []

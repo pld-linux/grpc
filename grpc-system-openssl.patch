@@ -1,0 +1,13 @@
+GRPC_BUILD_WITH_BORING_SSL_ASM=0 evaluates to True either, so use False as default.
+
+--- grpc-1.32.0/setup.py.orig	2020-09-27 11:25:35.950847530 +0200
++++ grpc-1.32.0/setup.py	2020-09-27 11:42:59.758936675 +0200
+@@ -106,7 +106,7 @@
+ ]
+ 
+ BUILD_WITH_BORING_SSL_ASM = os.environ.get('GRPC_BUILD_WITH_BORING_SSL_ASM',
+-                                           True)
++                                           False)
+ 
+ # Environment variable to determine whether or not the Cython extension should
+ # *use* Cython or use the generated C files. Note that this requires the C files

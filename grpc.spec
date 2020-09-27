@@ -11,7 +11,7 @@ Summary:	RPC library and framework
 Summary(pl.UTF-8):	Biblioteka i szkielet RPC
 Name:		grpc
 Version:	1.32.0
-Release:	1
+Release:	2
 License:	Apache v2.0
 Group:		Libraries
 #Source0Download: https://github.com/grpc/grpc/releases
@@ -22,6 +22,7 @@ Patch1:		%{name}-sphinx.patch
 Patch2:		%{name}-x32.patch
 Patch3:		%{name}-libdir.patch
 Patch4:		%{name}-system-re2.patch
+Patch5:		%{name}-system-openssl.patch
 URL:		https://grpc.io/
 BuildRequires:	abseil-cpp-devel
 BuildRequires:	c-ares-devel >= 1.13.0
@@ -144,6 +145,7 @@ Dokumentacja API biblioteki Pythona gRPC.
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
+%patch5 -p1
 
 %build
 install -d build

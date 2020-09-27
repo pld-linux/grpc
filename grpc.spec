@@ -29,6 +29,8 @@ BuildRequires:	cmake >= 3.5.1
 BuildRequires:	libstdc++-devel >= 6:4.7
 BuildRequires:	openssl-devel
 BuildRequires:	protobuf-devel >= 3.12
+# with re2Config for cmake
+BuildRequires:	re2-devel >= 20200801
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.714
 BuildRequires:	zlib-devel

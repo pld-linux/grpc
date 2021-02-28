@@ -80,9 +80,7 @@ Pliki nagłówkowe biblioteki gRPC.
 Summary:	API documentation for gRPC library
 Summary(pl.UTF-8):	Dokumentacja API biblioteki gRPC
 Group:		Documentation
-%if "%{_rpmversion}" >= "4.6"
 BuildArch:	noarch
-%endif
 
 %description apidocs
 API documentation for gRPC library.
@@ -128,9 +126,7 @@ systemów połączonych.
 Summary:	API documentation for Python gRPC library
 Summary(pl.UTF-8):	Dokumentacja API biblioteki Pythona gRPC
 Group:		Documentation
-%if "%{_rpmversion}" >= "4.6"
 BuildArch:	noarch
-%endif
 
 %description -n python-grpcio-apidocs
 API documentation for Python gRPC library.

@@ -1,8 +1,7 @@
-GRPC_BUILD_WITH_BORING_SSL_ASM=0 evaluates to True either, so use False as default.
-
---- grpc-1.32.0/setup.py.orig	2020-09-27 11:25:35.950847530 +0200
-+++ grpc-1.32.0/setup.py	2020-09-27 11:42:59.758936675 +0200
-@@ -106,7 +106,7 @@
+diff -urNp -x '*.orig' grpc-1.32.0.org/setup.py grpc-1.32.0/setup.py
+--- grpc-1.32.0.org/setup.py	2021-03-04 23:29:29.994075500 +0100
++++ grpc-1.32.0/setup.py	2021-03-04 23:29:30.220742787 +0100
+@@ -106,7 +106,7 @@ CLASSIFIERS = [
  ]
  
  BUILD_WITH_BORING_SSL_ASM = os.environ.get('GRPC_BUILD_WITH_BORING_SSL_ASM',

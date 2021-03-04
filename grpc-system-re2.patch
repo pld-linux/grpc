@@ -1,6 +1,7 @@
---- grpc-1.32.0/setup.py.orig	2020-09-26 16:22:20.927767970 +0200
-+++ grpc-1.32.0/setup.py	2020-09-26 16:42:32.857869048 +0200
-@@ -134,6 +134,8 @@
+diff -urNp -x '*.orig' grpc-1.32.0.org/setup.py grpc-1.32.0/setup.py
+--- grpc-1.32.0.org/setup.py	2021-03-04 23:29:29.267406836 +0100
++++ grpc-1.32.0/setup.py	2021-03-04 23:29:29.490740783 +0100
+@@ -134,6 +134,8 @@ BUILD_WITH_SYSTEM_CARES = os.environ.get
  
  BUILD_WITH_SYSTEM_ABSL = os.environ.get('GRPC_PYTHON_BUILD_SYSTEM_ABSL', False)
  
@@ -9,7 +10,7 @@
  # For local development use only: This skips building gRPC Core and its
  # dependencies, including protobuf and boringssl. This allows "incremental"
  # compilation by first building gRPC Core using make, then building only the
-@@ -252,6 +254,10 @@
+@@ -252,6 +254,10 @@ if BUILD_WITH_SYSTEM_ABSL:
      CORE_C_FILES = filter(lambda x: 'third_party/abseil-cpp' not in x, CORE_C_FILES)
      ABSL_INCLUDE = (os.path.join('/usr', 'include'),)
  
@@ -20,7 +21,7 @@
  EXTENSION_INCLUDE_DIRECTORIES = ((PYTHON_STEM,) + CORE_INCLUDE + ABSL_INCLUDE +
                                   ADDRESS_SORTING_INCLUDE + CARES_INCLUDE +
                                   RE2_INCLUDE + SSL_INCLUDE + UPB_INCLUDE +
-@@ -295,6 +295,8 @@
+@@ -288,6 +294,8 @@ if BUILD_WITH_SYSTEM_ABSL:
                              'absl_str_format_internal', 'absl_synchronization', 'absl_time',
                              'absl_civil_time', 'absl_time_zone', 'absl_bad_optional_access',
                              'absl_bad_variant_access')

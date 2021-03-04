@@ -1,7 +1,8 @@
---- grpc-1.30.0/setup.py.orig	2020-07-03 19:40:19.151045702 +0200
-+++ grpc-1.30.0/setup.py	2020-07-03 20:39:55.781669431 +0200
-@@ -363,7 +363,7 @@
- )
+diff -urNp -x '*.orig' grpc-1.32.0.org/setup.py grpc-1.32.0/setup.py
+--- grpc-1.32.0.org/setup.py	2021-03-04 23:29:27.074067442 +0100
++++ grpc-1.32.0/setup.py	2021-03-04 23:29:27.300734736 +0100
+@@ -415,7 +415,7 @@ EXTRAS_REQUIRES = {
+ }
  
  SETUP_REQUIRES = INSTALL_REQUIRES + (
 -    'Sphinx~=1.8.1',

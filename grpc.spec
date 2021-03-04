@@ -11,7 +11,7 @@ Summary:	RPC library and framework
 Summary(pl.UTF-8):	Biblioteka i szkielet RPC
 Name:		grpc
 Version:	1.32.0
-Release:	3
+Release:	4
 License:	Apache v2.0
 Group:		Libraries
 #Source0Download: https://github.com/grpc/grpc/releases

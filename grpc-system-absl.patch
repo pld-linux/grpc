@@ -1,6 +1,7 @@
---- grpc-1.30.0/setup.py.orig	2020-06-22 23:04:32.000000000 +0200
-+++ grpc-1.30.0/setup.py	2020-06-28 21:44:21.517738390 +0200
-@@ -116,6 +116,8 @@
+diff -urNp -x '*.orig' grpc-1.32.0.org/setup.py grpc-1.32.0/setup.py
+--- grpc-1.32.0.org/setup.py	2020-09-08 23:00:06.000000000 +0200
++++ grpc-1.32.0/setup.py	2021-03-04 23:29:26.600732792 +0100
+@@ -132,6 +132,8 @@ BUILD_WITH_SYSTEM_ZLIB = os.environ.get(
  BUILD_WITH_SYSTEM_CARES = os.environ.get('GRPC_PYTHON_BUILD_SYSTEM_CARES',
                                           False)
  
@@ -9,7 +10,7 @@
  # For local development use only: This skips building gRPC Core and its
  # dependencies, including protobuf and boringssl. This allows "incremental"
  # compilation by first building gRPC Core using make, then building only the
-@@ -230,6 +232,10 @@
+@@ -246,6 +248,10 @@ if BUILD_WITH_SYSTEM_CARES:
      CORE_C_FILES = filter(lambda x: 'third_party/cares' not in x, CORE_C_FILES)
      CARES_INCLUDE = (os.path.join('/usr', 'include'),)
  
@@ -19,8 +20,8 @@
 +
  EXTENSION_INCLUDE_DIRECTORIES = ((PYTHON_STEM,) + CORE_INCLUDE + ABSL_INCLUDE +
                                   ADDRESS_SORTING_INCLUDE + CARES_INCLUDE +
-                                  SSL_INCLUDE + UPB_INCLUDE +
-@@ -285,6 +285,16 @@
+                                  RE2_INCLUDE + SSL_INCLUDE + UPB_INCLUDE +
+@@ -272,6 +278,16 @@ if BUILD_WITH_SYSTEM_ZLIB:
      EXTENSION_LIBRARIES += ('z',)
  if BUILD_WITH_SYSTEM_CARES:
      EXTENSION_LIBRARIES += ('cares',)

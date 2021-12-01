@@ -2,14 +2,14 @@ diff -urNp -x '*.orig' grpc-1.32.0.org/setup.py grpc-1.32.0/setup.py
 --- grpc-1.32.0.org/setup.py	2020-09-08 23:00:06.000000000 +0200
 +++ grpc-1.32.0/setup.py	2021-03-04 23:29:26.600732792 +0100
 @@ -132,6 +132,8 @@ BUILD_WITH_SYSTEM_ZLIB = os.environ.get(
- BUILD_WITH_SYSTEM_CARES = os.environ.get('GRPC_PYTHON_BUILD_SYSTEM_CARES',
-                                          False)
+ BUILD_WITH_SYSTEM_CARES = _env_bool_value('GRPC_PYTHON_BUILD_SYSTEM_CARES',
+                                           'False')
  
 +BUILD_WITH_SYSTEM_ABSL = os.environ.get('GRPC_PYTHON_BUILD_SYSTEM_ABSL', False)
 +
- # For local development use only: This skips building gRPC Core and its
- # dependencies, including protobuf and boringssl. This allows "incremental"
- # compilation by first building gRPC Core using make, then building only the
+ # Export this variable to use the system installation of re2. You need to
+ # have the header files installed (in /usr/include/re2) and during
+ # runtime, the shared library must be installed
 @@ -246,6 +248,10 @@ if BUILD_WITH_SYSTEM_CARES:
      CORE_C_FILES = filter(lambda x: 'third_party/cares' not in x, CORE_C_FILES)
      CARES_INCLUDE = (os.path.join('/usr', 'include'),)
@@ -18,23 +18,75 @@ diff -urNp -x '*.orig' grpc-1.32.0.org/setup.py grpc-1.32.0/setup.py
 +    CORE_C_FILES = filter(lambda x: 'third_party/abseil-cpp' not in x, CORE_C_FILES)
 +    ABSL_INCLUDE = (os.path.join('/usr', 'include'),)
 +
- EXTENSION_INCLUDE_DIRECTORIES = ((PYTHON_STEM,) + CORE_INCLUDE + ABSL_INCLUDE +
-                                  ADDRESS_SORTING_INCLUDE + CARES_INCLUDE +
-                                  RE2_INCLUDE + SSL_INCLUDE + UPB_INCLUDE +
-@@ -272,6 +278,16 @@ if BUILD_WITH_SYSTEM_ZLIB:
-     EXTENSION_LIBRARIES += ('z',)
- if BUILD_WITH_SYSTEM_CARES:
+ if BUILD_WITH_SYSTEM_RE2:
+     CORE_C_FILES = filter(lambda x: 'third_party/re2' not in x, CORE_C_FILES)
+     RE2_INCLUDE = (os.path.join('/usr', 'include', 're2'),)
+@@ -272,6 +278,12 @@ if BUILD_WITH_SYSTEM_ZLIB:
      EXTENSION_LIBRARIES += ('cares',)
+ if BUILD_WITH_SYSTEM_RE2:
+     EXTENSION_LIBRARIES += ('re2',)
 +if BUILD_WITH_SYSTEM_ABSL:
-+    EXTENSION_LIBRARIES += ('absl_base', 'absl_exponential_biased', 'absl_malloc_internal',
-+                            'absl_raw_logging_internal', 'absl_spinlock_wait', 'absl_throw_delegate',
-+                            'absl_log_severity', 'absl_hashtablez_sampler', 'absl_raw_hash_set',
-+                            'absl_debugging_internal', 'absl_demangle_internal', 'absl_stacktrace',
-+                            'absl_symbolize', 'absl_city', 'absl_hash', 'absl_int128', 'absl_status',
-+                            'absl_strings', 'absl_cord', 'absl_strings_internal',
-+                            'absl_str_format_internal', 'absl_synchronization', 'absl_time',
-+                            'absl_civil_time', 'absl_time_zone', 'absl_bad_optional_access',
-+                            'absl_bad_variant_access')
++    EXTENSION_LIBRARIES += ('absl_bad_optional_access', 'absl_bad_variant_access', 'absl_base','absl_city',
++                            'absl_civil_time', 'absl_cord', 'absl_debugging_internal', 'absl_demangle_internal',
++                            'absl_exponential_biased', 'absl_graphcycles_internal', 'absl_hash', 'absl_hashtablez_sampler',
++                            'absl_int128', 'absl_log_severity', 'absl_malloc_internal', 'absl_raw_hash_set',
++                            'absl_raw_logging_internal', 'absl_spinlock_wait', 'absl_stacktrace', 'absl_status')
  
  DEFINE_MACROS = (('_WIN32_WINNT', 0x600),)
  asm_files = []
+--- grpc-1.42.0/CMakeLists.txt~	2021-12-01 22:42:50.000000000 +0100
++++ grpc-1.42.0/CMakeLists.txt	2021-12-01 22:54:59.760044195 +0100
+@@ -98,53 +98,23 @@
+ set_property(CACHE gRPC_ABSL_PROVIDER PROPERTY STRINGS "module" "package")
+ 
+ set(gRPC_ABSL_USED_TARGETS
+-  absl_algorithm
+-  absl_algorithm_container
+-  absl_atomic_hook
+   absl_bad_optional_access
+   absl_bad_variant_access
+   absl_base
+-  absl_base_internal
+-  absl_bind_front
+-  absl_bits
+   absl_city
+   absl_civil_time
+-  absl_compressed_tuple
+-  absl_config
+-  absl_container_common
+-  absl_container_memory
+   absl_cord
+-  absl_core_headers
+   absl_debugging_internal
+   absl_demangle_internal
+-  absl_dynamic_annotations
+-  absl_endian
+-  absl_errno_saver
+   absl_exponential_biased
+-  absl_fixed_array
+-  absl_flat_hash_map
+-  absl_function_ref
+   absl_graphcycles_internal
+   absl_hash
+-  absl_hash_function_defaults
+-  absl_hash_policy_traits
+-  absl_hashtable_debug_hooks
+   absl_hashtablez_sampler
+-  absl_have_sse
+-  absl_inlined_vector
+-  absl_inlined_vector_internal
+   absl_int128
+-  absl_kernel_timeout_internal
+-  absl_layout
+   absl_log_severity
+   absl_malloc_internal
+-  absl_memory
+-  absl_numeric_representation
+-  absl_optional
+-  absl_raw_hash_map
+   absl_raw_hash_set
+   absl_raw_logging_internal
+-  absl_span
+   absl_spinlock_wait
+   absl_stacktrace
+   absl_status

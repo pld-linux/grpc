@@ -34,9 +34,9 @@ diff -urNp -x '*.orig' grpc-1.32.0.org/setup.py grpc-1.32.0/setup.py
  
  DEFINE_MACROS = (('_WIN32_WINNT', 0x600),)
  asm_files = []
---- grpc-1.42.0/CMakeLists.txt~	2021-12-01 22:42:50.000000000 +0100
-+++ grpc-1.42.0/CMakeLists.txt	2021-12-01 22:54:59.760044195 +0100
-@@ -98,53 +98,23 @@
+--- grpc-1.43.0/CMakeLists.txt.orig	2022-02-16 18:44:09.497196632 +0100
++++ grpc-1.43.0/CMakeLists.txt	2022-02-16 18:47:09.636220735 +0100
+@@ -99,21 +99,11 @@ set(gRPC_ABSL_PROVIDER "module" CACHE ST
  set_property(CACHE gRPC_ABSL_PROVIDER PROPERTY STRINGS "module" "package")
  
  set(gRPC_ABSL_USED_TARGETS
@@ -56,6 +56,12 @@ diff -urNp -x '*.orig' grpc-1.32.0.org/setup.py grpc-1.32.0/setup.py
 -  absl_container_common
 -  absl_container_memory
    absl_cord
+   absl_cord_internal
+   absl_cordz_functions
+@@ -122,39 +112,19 @@ set(gRPC_ABSL_USED_TARGETS
+   absl_cordz_statistics
+   absl_cordz_update_scope
+   absl_cordz_update_tracker
 -  absl_core_headers
    absl_debugging_internal
    absl_demangle_internal
@@ -79,6 +85,7 @@ diff -urNp -x '*.orig' grpc-1.32.0.org/setup.py grpc-1.32.0/setup.py
 -  absl_kernel_timeout_internal
 -  absl_layout
    absl_log_severity
+   absl_low_level_hash
    absl_malloc_internal
 -  absl_memory
 -  absl_numeric_representation
@@ -86,6 +93,7 @@ diff -urNp -x '*.orig' grpc-1.32.0.org/setup.py grpc-1.32.0/setup.py
 -  absl_raw_hash_map
    absl_raw_hash_set
    absl_raw_logging_internal
+   absl_sample_recorder
 -  absl_span
    absl_spinlock_wait
    absl_stacktrace

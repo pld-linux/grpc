@@ -9,14 +9,13 @@
 Summary:	RPC library and framework
 Summary(pl.UTF-8):	Biblioteka i szkielet RPC
 Name:		grpc
-Version:	1.43.0
-Release:	4
+Version:	1.47.0
+Release:	1
 License:	Apache v2.0
 Group:		Libraries
 #Source0Download: https://github.com/grpc/grpc/releases
 Source0:	https://github.com/grpc/grpc/archive/v%{version}/%{name}-%{version}.tar.gz
-# Source0-md5:	92559743e7b5d3f67486c4c0de2f5cbe
-Patch0:		%{name}-system-absl.patch
+# Source0-md5:	ba6736177699865450206452a9ae49e0
 Patch1:		%{name}-sphinx.patch
 Patch2:		%{name}-x32.patch
 Patch3:		%{name}-libdir.patch
@@ -25,7 +24,8 @@ URL:		https://grpc.io/
 BuildRequires:	abseil-cpp-devel
 BuildRequires:	c-ares-devel >= 1.13.0
 BuildRequires:	cmake >= 3.5.1
-BuildRequires:	libstdc++-devel >= 6:4.7
+BuildRequires:	gcc >= 6:4.7
+BuildRequires:	libstdc++-devel >= 6:7
 BuildRequires:	openssl-devel
 BuildRequires:	protobuf-devel >= 3.12
 # with re2Config for cmake
@@ -35,7 +35,7 @@ BuildRequires:	rpmbuild(macros) >= 1.714
 BuildRequires:	zlib-devel
 %if %{with python3}
 BuildRequires:	python3-Cython >= 0.29.8
-BuildRequires:	python3-modules >= 1:3.5
+BuildRequires:	python3-modules >= 1:3.6
 %endif
 %if %{with apidocs}
 BuildRequires:	python3-Sphinx >= 1.8.1
@@ -43,8 +43,9 @@ BuildRequires:	python3-six >= 1.10
 %endif
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
-# require non-function grpc_core::ExecCtx::exec_ctx_ and grpc_core::ApplicationCallbackExecCtx::callback_exec_ctx_ symbols
-%define		skip_post_check_so	libgrpc\\+\\+.so.* libgrpc\\+\\+_unsecure.so.*
+# Libs rquire non-function grpc_core::ExecCtx::exec_ctx_ and grpc_core::ApplicationCallbackExecCtx::callback_exec_ctx_ symbols.
+# Wildcard '+' chars to workaround escape incompatibilities between rpm versions.
+%define		skip_post_check_so	libgrpc...so.* libgrpc.._unsecure.so.*
 
 %description
 gRPC is a modern, open source, high-performance remote procedure call
@@ -113,11 +114,12 @@ Dokumentacja API biblioteki Pythona gRPC.
 
 %prep
 %setup -q
-%patch0 -p1
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
 %patch5 -p1
+
+%{__rm} doc/.gitignore
 
 %build
 install -d build
@@ -171,7 +173,7 @@ export GRPC_PYTHON_BUILD_SYSTEM_ZLIB=1
 
 install -d $RPM_BUILD_ROOT%{_docdir}
 cp -pr doc $RPM_BUILD_ROOT%{_docdir}/%{name}-apidocs-%{version}
-%{__rm} -r $RPM_BUILD_ROOT%{_docdir}/%{name}-apidocs-%{version}/{csharp,python/sphinx,.gitignore}
+%{__rm} -r $RPM_BUILD_ROOT%{_docdir}/%{name}-apidocs-%{version}/python/sphinx
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -190,30 +192,30 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/grpc_python_plugin
 %attr(755,root,root) %{_bindir}/grpc_ruby_plugin
 %attr(755,root,root) %{_libdir}/libgpr.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libgpr.so.21
+%attr(755,root,root) %ghost %{_libdir}/libgpr.so.25
 %attr(755,root,root) %{_libdir}/libgrpc.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libgrpc.so.21
+%attr(755,root,root) %ghost %{_libdir}/libgrpc.so.25
 %attr(755,root,root) %{_libdir}/libgrpc_plugin_support.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libgrpc_plugin_support.so.1.43
+%attr(755,root,root) %ghost %{_libdir}/libgrpc_plugin_support.so.1.47
 %attr(755,root,root) %{_libdir}/libgrpc_unsecure.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libgrpc_unsecure.so.21
+%attr(755,root,root) %ghost %{_libdir}/libgrpc_unsecure.so.25
 %attr(755,root,root) %{_libdir}/libgrpc++.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libgrpc++.so.1.43
+%attr(755,root,root) %ghost %{_libdir}/libgrpc++.so.1.47
 %attr(755,root,root) %{_libdir}/libgrpc++_alts.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libgrpc++_alts.so.1.43
+%attr(755,root,root) %ghost %{_libdir}/libgrpc++_alts.so.1.47
 %attr(755,root,root) %{_libdir}/libgrpc++_error_details.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libgrpc++_error_details.so.1.43
+%attr(755,root,root) %ghost %{_libdir}/libgrpc++_error_details.so.1.47
 %attr(755,root,root) %{_libdir}/libgrpc++_reflection.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libgrpc++_reflection.so.1.43
+%attr(755,root,root) %ghost %{_libdir}/libgrpc++_reflection.so.1.47
 %attr(755,root,root) %{_libdir}/libgrpc++_unsecure.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libgrpc++_unsecure.so.1.43
+%attr(755,root,root) %ghost %{_libdir}/libgrpc++_unsecure.so.1.47
 %attr(755,root,root) %{_libdir}/libgrpcpp_channelz.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libgrpcpp_channelz.so.1.43
+%attr(755,root,root) %ghost %{_libdir}/libgrpcpp_channelz.so.1.47
 # TODO: use system libs instead
 %attr(755,root,root) %{_libdir}/libaddress_sorting.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libaddress_sorting.so.21
+%attr(755,root,root) %ghost %{_libdir}/libaddress_sorting.so.25
 %attr(755,root,root) %{_libdir}/libupb.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libupb.so.21
+%attr(755,root,root) %ghost %{_libdir}/libupb.so.25
 %{_datadir}/grpc
 
 %files devel

@@ -16,6 +16,8 @@ Group:		Libraries
 #Source0Download: https://github.com/grpc/grpc/releases
 Source0:	https://github.com/grpc/grpc/archive/v%{version}/%{name}-%{version}.tar.gz
 # Source0-md5:	ba6736177699865450206452a9ae49e0
+Source1:	https://github.com/census-instrumentation/opencensus-proto/archive/v0.3.0/opencensus-proto-0.3.0.tar.gz
+# Source1-md5:	0b208800a68548cbf2d4bff763c050a2
 Patch1:		%{name}-sphinx.patch
 Patch2:		%{name}-x32.patch
 Patch3:		%{name}-libdir.patch
@@ -120,6 +122,9 @@ Dokumentacja API biblioteki Pythona gRPC.
 %patch5 -p1
 
 %{__rm} doc/.gitignore
+
+# simulate download_archive result
+%{__tar} xf %{SOURCE1} -C third_party/opencensus-proto --strip-components=1 opencensus-proto-0.3.0/src
 
 %build
 install -d build

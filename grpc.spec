@@ -10,7 +10,7 @@ Summary:	RPC library and framework
 Summary(pl.UTF-8):	Biblioteka i szkielet RPC
 Name:		grpc
 Version:	1.47.0
-Release:	2
+Release:	3
 License:	Apache v2.0
 Group:		Libraries
 #Source0Download: https://github.com/grpc/grpc/releases
@@ -66,6 +66,9 @@ Summary:	Header files for gRPC library
 Summary(pl.UTF-8):	Pliki nagłówkowe biblioteki gRPC
 Group:		Development/Libraries
 Requires:	%{name} = %{version}-%{release}
+Requires:	c-ares-devel >= 1.13.0
+Requires:	re2-devel >= 20200801
+Requires:	zlib-devel
 
 %description devel
 Header files for gRPC library.

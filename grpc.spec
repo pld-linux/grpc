@@ -32,6 +32,7 @@ BuildRequires:	openssl-devel
 BuildRequires:	protobuf-devel >= 3.12
 # with re2Config for cmake
 BuildRequires:	re2-devel >= 20200801
+BuildRequires:	rpm-build >= 4.6
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.714
 BuildRequires:	zlib-devel

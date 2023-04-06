@@ -9,21 +9,22 @@
 Summary:	RPC library and framework
 Summary(pl.UTF-8):	Biblioteka i szkielet RPC
 Name:		grpc
-Version:	1.47.0
-Release:	3
+# 1.51+ requires protobuf 4.x
+Version:	1.50.2
+Release:	1
 License:	Apache v2.0
 Group:		Libraries
 #Source0Download: https://github.com/grpc/grpc/releases
 Source0:	https://github.com/grpc/grpc/archive/v%{version}/%{name}-%{version}.tar.gz
-# Source0-md5:	ba6736177699865450206452a9ae49e0
+# Source0-md5:	d9cf836d2d17919b941c274780bcc2e2
 Source1:	https://github.com/census-instrumentation/opencensus-proto/archive/v0.3.0/opencensus-proto-0.3.0.tar.gz
 # Source1-md5:	0b208800a68548cbf2d4bff763c050a2
+Patch0:		%{name}-format.patch
 Patch1:		%{name}-sphinx.patch
 Patch2:		%{name}-x32.patch
-Patch3:		%{name}-libdir.patch
 Patch5:		%{name}-system-openssl.patch
 URL:		https://grpc.io/
-BuildRequires:	abseil-cpp-devel
+BuildRequires:	abseil-cpp-devel >= 20220623
 BuildRequires:	c-ares-devel >= 1.13.0
 BuildRequires:	cmake >= 3.5.1
 BuildRequires:	gcc >= 6:4.7
@@ -120,9 +121,9 @@ Dokumentacja API biblioteki Pythona gRPC.
 
 %prep
 %setup -q
+%patch0 -p1
 %patch1 -p1
 %patch2 -p1
-%patch3 -p1
 %patch5 -p1
 
 %{__rm} doc/.gitignore
@@ -201,30 +202,30 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/grpc_python_plugin
 %attr(755,root,root) %{_bindir}/grpc_ruby_plugin
 %attr(755,root,root) %{_libdir}/libgpr.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libgpr.so.25
+%attr(755,root,root) %ghost %{_libdir}/libgpr.so.28
 %attr(755,root,root) %{_libdir}/libgrpc.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libgrpc.so.25
+%attr(755,root,root) %ghost %{_libdir}/libgrpc.so.28
 %attr(755,root,root) %{_libdir}/libgrpc_plugin_support.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libgrpc_plugin_support.so.1.47
+%attr(755,root,root) %ghost %{_libdir}/libgrpc_plugin_support.so.1.50
 %attr(755,root,root) %{_libdir}/libgrpc_unsecure.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libgrpc_unsecure.so.25
+%attr(755,root,root) %ghost %{_libdir}/libgrpc_unsecure.so.28
 %attr(755,root,root) %{_libdir}/libgrpc++.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libgrpc++.so.1.47
+%attr(755,root,root) %ghost %{_libdir}/libgrpc++.so.1.50
 %attr(755,root,root) %{_libdir}/libgrpc++_alts.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libgrpc++_alts.so.1.47
+%attr(755,root,root) %ghost %{_libdir}/libgrpc++_alts.so.1.50
 %attr(755,root,root) %{_libdir}/libgrpc++_error_details.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libgrpc++_error_details.so.1.47
+%attr(755,root,root) %ghost %{_libdir}/libgrpc++_error_details.so.1.50
 %attr(755,root,root) %{_libdir}/libgrpc++_reflection.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libgrpc++_reflection.so.1.47
+%attr(755,root,root) %ghost %{_libdir}/libgrpc++_reflection.so.1.50
 %attr(755,root,root) %{_libdir}/libgrpc++_unsecure.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libgrpc++_unsecure.so.1.47
+%attr(755,root,root) %ghost %{_libdir}/libgrpc++_unsecure.so.1.50
 %attr(755,root,root) %{_libdir}/libgrpcpp_channelz.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libgrpcpp_channelz.so.1.47
+%attr(755,root,root) %ghost %{_libdir}/libgrpcpp_channelz.so.1.50
 # TODO: use system libs instead
 %attr(755,root,root) %{_libdir}/libaddress_sorting.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libaddress_sorting.so.25
+%attr(755,root,root) %ghost %{_libdir}/libaddress_sorting.so.28
 %attr(755,root,root) %{_libdir}/libupb.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libupb.so.25
+%attr(755,root,root) %ghost %{_libdir}/libupb.so.28
 %{_datadir}/grpc
 
 %files devel

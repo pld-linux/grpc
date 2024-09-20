@@ -11,7 +11,7 @@ Summary(pl.UTF-8):	Biblioteka i szkielet RPC
 Name:		grpc
 # 1.51+ requires protobuf 4.x
 Version:	1.50.2
-Release:	2
+Release:	3
 License:	Apache v2.0
 Group:		Libraries
 #Source0Download: https://github.com/grpc/grpc/releases

@@ -11,7 +11,7 @@ Summary(pl.UTF-8):	Biblioteka i szkielet RPC
 Name:		grpc
 # 1.51+ requires protobuf 4.x
 Version:	1.50.2
-Release:	3
+Release:	4
 License:	Apache v2.0
 Group:		Libraries
 #Source0Download: https://github.com/grpc/grpc/releases
@@ -153,6 +153,7 @@ export GRPC_PYTHON_BUILD_SYSTEM_CARES=1
 export GRPC_PYTHON_BUILD_SYSTEM_OPENSSL=1
 export GRPC_PYTHON_BUILD_SYSTEM_RE2=1
 export GRPC_PYTHON_BUILD_SYSTEM_ZLIB=1
+export GRPC_PYTHON_CFLAGS="-std=c++17 -fvisibility=hidden -fno-wrapv -fno-exceptions"
 
 %if %{with python3}
 %if %{with apidocs}
@@ -176,6 +177,7 @@ export GRPC_PYTHON_BUILD_SYSTEM_CARES=1
 export GRPC_PYTHON_BUILD_SYSTEM_OPENSSL=1
 export GRPC_PYTHON_BUILD_SYSTEM_RE2=1
 export GRPC_PYTHON_BUILD_SYSTEM_ZLIB=1
+export GRPC_PYTHON_CFLAGS="-std=c++17 -fvisibility=hidden -fno-wrapv -fno-exceptions"
 
 %if %{with python3}
 %py3_install

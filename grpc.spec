@@ -38,8 +38,10 @@ BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.714
 BuildRequires:	zlib-devel
 %if %{with python3}
+BuildRequires:	python3 >= 1:3.7
 BuildRequires:	python3-Cython >= 0.29.8
-BuildRequires:	python3-modules >= 1:3.6
+BuildRequires:	python3-setuptools
+BuildRequires:	python3-modules >= 1:3.7
 %endif
 %if %{with apidocs}
 BuildRequires:	python3-Sphinx >= 1.8.1

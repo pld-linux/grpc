@@ -40,8 +40,8 @@ BuildRequires:	zlib-devel
 %if %{with python3}
 BuildRequires:	python3 >= 1:3.7
 BuildRequires:	python3-Cython >= 0.29.8
-BuildRequires:	python3-setuptools
 BuildRequires:	python3-modules >= 1:3.7
+BuildRequires:	python3-setuptools
 %endif
 %if %{with apidocs}
 BuildRequires:	python3-Sphinx >= 1.8.1
@@ -123,10 +123,10 @@ Dokumentacja API biblioteki Pythona gRPC.
 
 %prep
 %setup -q
-%patch0 -p1
-%patch1 -p1
-%patch2 -p1
-%patch5 -p1
+%patch -P 0 -p1
+%patch -P 1 -p1
+%patch -P 2 -p1
+%patch -P 5 -p1
 
 %{__rm} doc/.gitignore
 

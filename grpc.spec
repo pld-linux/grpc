@@ -11,7 +11,7 @@ Summary(pl.UTF-8):	Biblioteka i szkielet RPC
 Name:		grpc
 # 1.51+ requires protobuf 4.x
 Version:	1.50.2
-Release:	5
+Release:	6
 License:	Apache v2.0
 Group:		Libraries
 #Source0Download: https://github.com/grpc/grpc/releases
@@ -23,6 +23,7 @@ Patch0:		%{name}-format.patch
 Patch1:		%{name}-sphinx.patch
 Patch2:		%{name}-x32.patch
 Patch5:		%{name}-system-openssl.patch
+Patch6:		cython3.patch
 URL:		https://grpc.io/
 BuildRequires:	abseil-cpp-devel >= 20220623
 BuildRequires:	c-ares-devel >= 1.13.0
@@ -39,7 +40,7 @@ BuildRequires:	rpmbuild(macros) >= 1.714
 BuildRequires:	zlib-devel
 %if %{with python3}
 BuildRequires:	python3 >= 1:3.7
-BuildRequires:	python3-Cython >= 0.29.8
+BuildRequires:	python3-Cython >= 3
 BuildRequires:	python3-modules >= 1:3.7
 BuildRequires:	python3-setuptools
 %endif
@@ -127,6 +128,7 @@ Dokumentacja API biblioteki Pythona gRPC.
 %patch -P 1 -p1
 %patch -P 2 -p1
 %patch -P 5 -p1
+%patch -P 6 -p1
 
 %{__rm} doc/.gitignore
 

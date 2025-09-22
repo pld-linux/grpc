@@ -5,6 +5,7 @@
 # Conditional build:
 %bcond_without	apidocs		# (Python) API docs build
 %bcond_without	python3		# CPython 3.x module
+%bcond_without	systemd		# systemd support
 #
 Summary:	RPC library and framework
 Summary(pl.UTF-8):	Biblioteka i szkielet RPC
@@ -28,16 +29,18 @@ Patch8:		python-deps.patch
 URL:		https://grpc.io/
 BuildRequires:	abseil-cpp-devel >= 20220623
 BuildRequires:	c-ares-devel >= 1.13.0
-BuildRequires:	cmake >= 3.5.1
+BuildRequires:	cmake >= 3.16
 BuildRequires:	gcc >= 6:4.7
 BuildRequires:	libstdc++-devel >= 6:7
 BuildRequires:	openssl-devel
+BuildRequires:	pkgconfig
 BuildRequires:	protobuf-devel >= 3.12
 # with re2Config for cmake
 BuildRequires:	re2-devel >= 20200801
 BuildRequires:	rpm-build >= 4.6
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.714
+%{?with_systemd:BuildRequires:	systemd-devel >= 1:233}
 BuildRequires:	zlib-devel
 %if %{with python3}
 BuildRequires:	python3 >= 1:3.7
@@ -50,6 +53,10 @@ BuildRequires:	python3-setuptools
 BuildRequires:	python3-Sphinx >= 1.8.1
 BuildRequires:	python3-six >= 1.10
 %endif
+%ifarch %{ix86}
+Requires:	cpuinfo(sse2)
+%endif
+%{?with_systemd:Requires:	systemd-libs >= 1:233}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 # Libs rquire non-function grpc_core::ExecCtx::exec_ctx_ and grpc_core::ApplicationCallbackExecCtx::callback_exec_ctx_ symbols.
@@ -151,7 +158,9 @@ cd build
 	-DgRPC_PROTOBUF_PROVIDER=package \
 	-DgRPC_RE2_PROVIDER=package \
 	-DgRPC_SSL_PROVIDER=package \
-	-DgRPC_ZLIB_PROVIDER=package
+	-DgRPC_ZLIB_PROVIDER=package \
+	-DgRPC_DOWNLOAD_ARCHIVES:BOOL=OFF \
+	-DgRPC_USE_SYSTEMD:BOOL=%{__ON_OFF systemd}
 
 %{__make}
 cd ..

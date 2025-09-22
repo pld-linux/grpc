@@ -1,0 +1,28 @@
+--- grpc-1.75.0/setup.py~	2025-09-15 18:21:36.000000000 +0200
++++ grpc-1.75.0/setup.py	2025-09-22 12:21:49.923327166 +0200
+@@ -542,14 +542,14 @@
+     "": PYTHON_STEM,
+ }
+ 
+-INSTALL_REQUIRES = ("typing-extensions~=4.12",)
++INSTALL_REQUIRES = ("typing-extensions>=4.12",)
+ 
+ EXTRAS_REQUIRES = {
+     "protobuf": "grpcio-tools>={version}".format(version=grpc_version.VERSION),
+ }
+ 
+ SETUP_REQUIRES = (
+-    INSTALL_REQUIRES + ("Sphinx~=1.8.1",) if ENABLE_DOCUMENTATION_BUILD else ()
++    INSTALL_REQUIRES + ("Sphinx>=1.8.1",) if ENABLE_DOCUMENTATION_BUILD else ()
+ )
+ 
+ try:
+@@ -565,7 +565,7 @@
+         sys.stderr.write(
+             "We could not find Cython. Setup may take 10-20 minutes.\n"
+         )
+-        SETUP_REQUIRES += ("cython==3.1.1",)
++        SETUP_REQUIRES += ("cython>=3.1.1",)
+ 
+ COMMAND_CLASS = {
+     "doc": commands.SphinxDocumentation,

@@ -239,8 +239,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libupb_*.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libupb_*.so.50
 # TODO: use system libs instead
-%attr(755,root,root) %{_libdir}/libutf8_range_lib.so.50
-%attr(755,root,root) %ghost %{_libdir}/libutf8_range_lib.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libutf8_range_lib.so.50
+%attr(755,root,root) %{_libdir}/libutf8_range_lib.so.*.*.*
 %{_datadir}/grpc
 
 %files devel

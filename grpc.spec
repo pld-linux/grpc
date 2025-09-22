@@ -11,7 +11,7 @@ Summary:	RPC library and framework
 Summary(pl.UTF-8):	Biblioteka i szkielet RPC
 Name:		grpc
 Version:	1.75.0
-Release:	0.1
+Release:	1
 License:	Apache v2.0
 Group:		Libraries
 #Source0Download: https://github.com/grpc/grpc/releases
@@ -19,13 +19,7 @@ Source0:	https://github.com/grpc/grpc/archive/v%{version}/%{name}-%{version}.tar
 # Source0-md5:	0b6c7ec8b62e9a71107b5f5bd12ef1a6
 Source1:	https://github.com/census-instrumentation/opencensus-proto/archive/v0.3.0/opencensus-proto-0.3.0.tar.gz
 # Source1-md5:	0b208800a68548cbf2d4bff763c050a2
-Patch0:		%{name}-format.patch
-Patch1:		%{name}-sphinx.patch
-Patch2:		%{name}-x32.patch
-Patch5:		%{name}-system-openssl.patch
-Patch6:		cython3.patch
-Patch7:		abseil.patch
-Patch8:		python-deps.patch
+Patch0:		python-deps.patch
 URL:		https://grpc.io/
 BuildRequires:	abseil-cpp-devel >= 20220623
 BuildRequires:	c-ares-devel >= 1.13.0
@@ -133,13 +127,7 @@ Dokumentacja API biblioteki Pythona gRPC.
 
 %prep
 %setup -q
-#patch -P 0 -p1
-#patch -P 1 -p1
-#patch -P 2 -p1
-#patch -P 5 -p1
-#patch -P 6 -p1
-#patch -P 7 -p1
-%patch -P8 -p1
+%patch -P0 -p1
 
 %{__rm} doc/.gitignore
 

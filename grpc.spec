@@ -1,5 +1,5 @@
 # TODO:
-# - system address_sorting and upb?
+# - system address_sorting, upb, utf8_range?
 # - use shared grpc core in python modules
 #
 # Conditional build:
@@ -10,13 +10,13 @@
 Summary:	RPC library and framework
 Summary(pl.UTF-8):	Biblioteka i szkielet RPC
 Name:		grpc
-Version:	1.75.0
+Version:	1.76.0
 Release:	1
 License:	Apache v2.0
 Group:		Libraries
 #Source0Download: https://github.com/grpc/grpc/releases
 Source0:	https://github.com/grpc/grpc/archive/v%{version}/%{name}-%{version}.tar.gz
-# Source0-md5:	0b6c7ec8b62e9a71107b5f5bd12ef1a6
+# Source0-md5:	3237527a0c83f2a662b0bf56bba5d540
 Source1:	https://github.com/census-instrumentation/opencensus-proto/archive/v0.3.0/opencensus-proto-0.3.0.tar.gz
 # Source1-md5:	0b208800a68548cbf2d4bff763c050a2
 Patch0:		python-deps.patch
@@ -135,9 +135,7 @@ Dokumentacja API biblioteki Pythona gRPC.
 %{__tar} xf %{SOURCE1} -C third_party/opencensus-proto --strip-components=1 opencensus-proto-0.3.0/src
 
 %build
-install -d build
-cd build
-%cmake .. \
+%cmake -B build \
 	-DCMAKE_CXX_STANDARD=17 \
 	-DgRPC_INSTALL_CMAKEDIR:PATH=%{_lib}/cmake/grpc \
 	-DgRPC_INSTALL_LIBDIR:PATH=%{_lib} \
@@ -150,8 +148,7 @@ cd build
 	-DgRPC_DOWNLOAD_ARCHIVES:BOOL=OFF \
 	-DgRPC_USE_SYSTEMD:BOOL=%{__ON_OFF systemd}
 
-%{__make}
-cd ..
+%{__make} -C build
 
 export GRPC_PYTHON_BUILD_SYSTEM_ABSL=1
 export GRPC_PYTHON_BUILD_SYSTEM_CARES=1
@@ -209,53 +206,53 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/grpc_python_plugin
 %attr(755,root,root) %{_bindir}/grpc_ruby_plugin
 %attr(755,root,root) %{_libdir}/libgpr.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libgpr.so.50
+%ghost %{_libdir}/libgpr.so.51
 %attr(755,root,root) %{_libdir}/libgrpc.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libgrpc.so.50
+%ghost %{_libdir}/libgrpc.so.51
 %attr(755,root,root) %{_libdir}/libgrpc_authorization_provider.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libgrpc_authorization_provider.so.1.75
+%ghost %{_libdir}/libgrpc_authorization_provider.so.1.76
 %attr(755,root,root) %{_libdir}/libgrpc_plugin_support.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libgrpc_plugin_support.so.1.75
+%ghost %{_libdir}/libgrpc_plugin_support.so.1.76
 %attr(755,root,root) %{_libdir}/libgrpc_unsecure.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libgrpc_unsecure.so.50
+%ghost %{_libdir}/libgrpc_unsecure.so.51
 %attr(755,root,root) %{_libdir}/libgrpc++.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libgrpc++.so.1.75
+%ghost %{_libdir}/libgrpc++.so.1.76
 %attr(755,root,root) %{_libdir}/libgrpc++_alts.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libgrpc++_alts.so.1.75
+%ghost %{_libdir}/libgrpc++_alts.so.1.76
 %attr(755,root,root) %{_libdir}/libgrpc++_error_details.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libgrpc++_error_details.so.1.75
+%ghost %{_libdir}/libgrpc++_error_details.so.1.76
 %attr(755,root,root) %{_libdir}/libgrpc++_reflection.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libgrpc++_reflection.so.1.75
+%ghost %{_libdir}/libgrpc++_reflection.so.1.76
 %attr(755,root,root) %{_libdir}/libgrpc++_unsecure.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libgrpc++_unsecure.so.1.75
+%ghost %{_libdir}/libgrpc++_unsecure.so.1.76
 %attr(755,root,root) %{_libdir}/libgrpcpp_channelz.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libgrpcpp_channelz.so.1.75
+%ghost %{_libdir}/libgrpcpp_channelz.so.1.76
 # TODO: use system libs instead
 %attr(755,root,root) %{_libdir}/libaddress_sorting.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libaddress_sorting.so.50
+%ghost %{_libdir}/libaddress_sorting.so.51
 %attr(755,root,root) %{_libdir}/libupb_*.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libupb_*.so.50
+%ghost %{_libdir}/libupb_*.so.51
 # TODO: use system libs instead
-%attr(755,root,root) %ghost %{_libdir}/libutf8_range_lib.so.50
 %attr(755,root,root) %{_libdir}/libutf8_range_lib.so.*.*.*
+%ghost %{_libdir}/libutf8_range_lib.so.51
 %{_datadir}/grpc
 
 %files devel
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libgpr.so
-%attr(755,root,root) %{_libdir}/libgrpc.so
-%attr(755,root,root) %{_libdir}/libgrpc_authorization_provider.so
-%attr(755,root,root) %{_libdir}/libgrpc_plugin_support.so
-%attr(755,root,root) %{_libdir}/libgrpc_unsecure.so
-%attr(755,root,root) %{_libdir}/libgrpc++.so
-%attr(755,root,root) %{_libdir}/libgrpc++_alts.so
-%attr(755,root,root) %{_libdir}/libgrpc++_error_details.so
-%attr(755,root,root) %{_libdir}/libgrpc++_reflection.so
-%attr(755,root,root) %{_libdir}/libgrpc++_unsecure.so
-%attr(755,root,root) %{_libdir}/libgrpcpp_channelz.so
-%attr(755,root,root) %{_libdir}/libaddress_sorting.so
-%attr(755,root,root) %{_libdir}/libupb_*.so
-%attr(755,root,root) %{_libdir}/libutf8_range_lib.so
+%{_libdir}/libgpr.so
+%{_libdir}/libgrpc.so
+%{_libdir}/libgrpc_authorization_provider.so
+%{_libdir}/libgrpc_plugin_support.so
+%{_libdir}/libgrpc_unsecure.so
+%{_libdir}/libgrpc++.so
+%{_libdir}/libgrpc++_alts.so
+%{_libdir}/libgrpc++_error_details.so
+%{_libdir}/libgrpc++_reflection.so
+%{_libdir}/libgrpc++_unsecure.so
+%{_libdir}/libgrpcpp_channelz.so
+%{_libdir}/libaddress_sorting.so
+%{_libdir}/libupb_*.so
+%{_libdir}/libutf8_range_lib.so
 %{_includedir}/grpc
 %{_includedir}/grpc++
 %{_includedir}/grpcpp

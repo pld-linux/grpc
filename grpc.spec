@@ -1,5 +1,5 @@
 # TODO:
-# - system address_sorting, upb, utf8_range?
+# - system address_sorting, upb, utf8_range, xxhash?
 # - use shared grpc core in python modules
 #
 # Conditional build:
@@ -10,16 +10,17 @@
 Summary:	RPC library and framework
 Summary(pl.UTF-8):	Biblioteka i szkielet RPC
 Name:		grpc
-Version:	1.76.0
+Version:	1.78.1
 Release:	1
 License:	Apache v2.0
 Group:		Libraries
 #Source0Download: https://github.com/grpc/grpc/releases
 Source0:	https://github.com/grpc/grpc/archive/v%{version}/%{name}-%{version}.tar.gz
-# Source0-md5:	3237527a0c83f2a662b0bf56bba5d540
+# Source0-md5:	9f22f0daeb0f0d75c8206654e4fc79b3
 Source1:	https://github.com/census-instrumentation/opencensus-proto/archive/v0.3.0/opencensus-proto-0.3.0.tar.gz
 # Source1-md5:	0b208800a68548cbf2d4bff763c050a2
 Patch0:		python-deps.patch
+Patch1:		%{name}-system-absl.patch
 URL:		https://grpc.io/
 BuildRequires:	abseil-cpp-devel >= 20220623
 BuildRequires:	c-ares-devel >= 1.13.0
@@ -38,14 +39,12 @@ BuildRequires:	rpmbuild(macros) >= 1.714
 BuildRequires:	zlib-devel
 %if %{with python3}
 BuildRequires:	python3 >= 1:3.7
-BuildRequires:	python3-Cython >= 3
-BuildRequires:	python3-attrs
+BuildRequires:	python3-Cython >= 3.1.1
 BuildRequires:	python3-modules >= 1:3.7
 BuildRequires:	python3-setuptools
 %endif
 %if %{with apidocs}
 BuildRequires:	python3-Sphinx >= 1.8.1
-BuildRequires:	python3-six >= 1.10
 %endif
 %ifarch %{ix86}
 Requires:	cpuinfo(sse2)
@@ -128,6 +127,7 @@ Dokumentacja API biblioteki Pythona gRPC.
 %prep
 %setup -q
 %patch -P0 -p1
+%patch -P1 -p1
 
 %{__rm} doc/.gitignore
 
@@ -205,36 +205,36 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/grpc_php_plugin
 %attr(755,root,root) %{_bindir}/grpc_python_plugin
 %attr(755,root,root) %{_bindir}/grpc_ruby_plugin
-%attr(755,root,root) %{_libdir}/libgpr.so.*.*.*
-%ghost %{_libdir}/libgpr.so.51
-%attr(755,root,root) %{_libdir}/libgrpc.so.*.*.*
-%ghost %{_libdir}/libgrpc.so.51
-%attr(755,root,root) %{_libdir}/libgrpc_authorization_provider.so.*.*.*
-%ghost %{_libdir}/libgrpc_authorization_provider.so.1.76
-%attr(755,root,root) %{_libdir}/libgrpc_plugin_support.so.*.*.*
-%ghost %{_libdir}/libgrpc_plugin_support.so.1.76
-%attr(755,root,root) %{_libdir}/libgrpc_unsecure.so.*.*.*
-%ghost %{_libdir}/libgrpc_unsecure.so.51
-%attr(755,root,root) %{_libdir}/libgrpc++.so.*.*.*
-%ghost %{_libdir}/libgrpc++.so.1.76
-%attr(755,root,root) %{_libdir}/libgrpc++_alts.so.*.*.*
-%ghost %{_libdir}/libgrpc++_alts.so.1.76
-%attr(755,root,root) %{_libdir}/libgrpc++_error_details.so.*.*.*
-%ghost %{_libdir}/libgrpc++_error_details.so.1.76
-%attr(755,root,root) %{_libdir}/libgrpc++_reflection.so.*.*.*
-%ghost %{_libdir}/libgrpc++_reflection.so.1.76
-%attr(755,root,root) %{_libdir}/libgrpc++_unsecure.so.*.*.*
-%ghost %{_libdir}/libgrpc++_unsecure.so.1.76
-%attr(755,root,root) %{_libdir}/libgrpcpp_channelz.so.*.*.*
-%ghost %{_libdir}/libgrpcpp_channelz.so.1.76
+%{_libdir}/libgpr.so.*.*.*
+%ghost %{_libdir}/libgpr.so.52
+%{_libdir}/libgrpc.so.*.*.*
+%ghost %{_libdir}/libgrpc.so.52
+%{_libdir}/libgrpc_authorization_provider.so.*.*.*
+%ghost %{_libdir}/libgrpc_authorization_provider.so.1.78
+%{_libdir}/libgrpc_plugin_support.so.*.*.*
+%ghost %{_libdir}/libgrpc_plugin_support.so.1.78
+%{_libdir}/libgrpc_unsecure.so.*.*.*
+%ghost %{_libdir}/libgrpc_unsecure.so.52
+%{_libdir}/libgrpc++.so.*.*.*
+%ghost %{_libdir}/libgrpc++.so.1.78
+%{_libdir}/libgrpc++_alts.so.*.*.*
+%ghost %{_libdir}/libgrpc++_alts.so.1.78
+%{_libdir}/libgrpc++_error_details.so.*.*.*
+%ghost %{_libdir}/libgrpc++_error_details.so.1.78
+%{_libdir}/libgrpc++_reflection.so.*.*.*
+%ghost %{_libdir}/libgrpc++_reflection.so.1.78
+%{_libdir}/libgrpc++_unsecure.so.*.*.*
+%ghost %{_libdir}/libgrpc++_unsecure.so.1.78
+%{_libdir}/libgrpcpp_channelz.so.*.*.*
+%ghost %{_libdir}/libgrpcpp_channelz.so.1.78
 # TODO: use system libs instead
-%attr(755,root,root) %{_libdir}/libaddress_sorting.so.*.*.*
-%ghost %{_libdir}/libaddress_sorting.so.51
-%attr(755,root,root) %{_libdir}/libupb_*.so.*.*.*
-%ghost %{_libdir}/libupb_*.so.51
+%{_libdir}/libaddress_sorting.so.*.*.*
+%ghost %{_libdir}/libaddress_sorting.so.52
+%{_libdir}/libupb_*.so.*.*.*
+%ghost %{_libdir}/libupb_*.so.52
 # TODO: use system libs instead
-%attr(755,root,root) %{_libdir}/libutf8_range_lib.so.*.*.*
-%ghost %{_libdir}/libutf8_range_lib.so.51
+%{_libdir}/libutf8_range_lib.so.*.*.*
+%ghost %{_libdir}/libutf8_range_lib.so.52
 %{_datadir}/grpc
 
 %files devel
@@ -275,7 +275,7 @@ rm -rf $RPM_BUILD_ROOT
 %{py3_sitedir}/grpc/*.py
 %{py3_sitedir}/grpc/__pycache__
 %dir %{py3_sitedir}/grpc/_cython
-%attr(755,root,root) %{py3_sitedir}/grpc/_cython/cygrpc.cpython-*.so
+%{py3_sitedir}/grpc/_cython/cygrpc.cpython-*.so
 %{py3_sitedir}/grpc/_cython/__init__.py
 %{py3_sitedir}/grpc/_cython/__pycache__
 %{py3_sitedir}/grpc/_cython/_credentials

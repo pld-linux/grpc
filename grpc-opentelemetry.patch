@@ -1,0 +1,11 @@
+--- grpc-1.81.1/src/cpp/ext/otel/otel_plugin.cc.orig	2026-06-23 17:17:11.254026617 +0200
++++ grpc-1.81.1/src/cpp/ext/otel/otel_plugin.cc	2026-06-23 17:17:25.303950502 +0200
+@@ -485,7 +485,7 @@ class OpenTelemetryPluginImpl::CounterEx
+       : impl_(impl), md_(md) {}
+ 
+   void Export(opentelemetry::metrics::ObserverResult result) {
+-    Sink sink(std::get<opentelemetry::nostd::shared_ptr<
++    Sink sink(opentelemetry::nostd::get<opentelemetry::nostd::shared_ptr<
+                   opentelemetry::metrics::ObserverResultT<int64_t>>>(result),
+               md_->shape);
+     impl_->QueryMetrics({md_->name}, sink);

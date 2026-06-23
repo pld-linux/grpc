@@ -4,23 +4,25 @@
 #
 # Conditional build:
 %bcond_without	apidocs		# (Python) API docs build
+%bcond_without	opentelemetry	# OpenTelemetry support
 %bcond_without	python3		# CPython 3.x module
 %bcond_without	systemd		# systemd support
 #
 Summary:	RPC library and framework
 Summary(pl.UTF-8):	Biblioteka i szkielet RPC
 Name:		grpc
-Version:	1.78.1
+Version:	1.81.1
 Release:	1
 License:	Apache v2.0
 Group:		Libraries
 #Source0Download: https://github.com/grpc/grpc/releases
 Source0:	https://github.com/grpc/grpc/archive/v%{version}/%{name}-%{version}.tar.gz
-# Source0-md5:	9f22f0daeb0f0d75c8206654e4fc79b3
+# Source0-md5:	939012ba93545dd8e3055f05d83d7e14
 Source1:	https://github.com/census-instrumentation/opencensus-proto/archive/v0.3.0/opencensus-proto-0.3.0.tar.gz
 # Source1-md5:	0b208800a68548cbf2d4bff763c050a2
 Patch0:		python-deps.patch
 Patch1:		%{name}-system-absl.patch
+Patch2:		%{name}-opentelemetry.patch
 URL:		https://grpc.io/
 BuildRequires:	abseil-cpp-devel >= 20220623
 BuildRequires:	c-ares-devel >= 1.13.0
@@ -28,6 +30,9 @@ BuildRequires:	cmake >= 3.16
 BuildRequires:	gcc >= 6:4.7
 BuildRequires:	libstdc++-devel >= 6:7
 BuildRequires:	openssl-devel
+%if %{with opentelemetry}
+BuildRequires:	opentelemetry-cpp-devel
+%endif
 BuildRequires:	pkgconfig
 BuildRequires:	protobuf-devel >= 3.12
 # with re2Config for cmake
@@ -38,9 +43,9 @@ BuildRequires:	rpmbuild(macros) >= 1.714
 %{?with_systemd:BuildRequires:	systemd-devel >= 1:233}
 BuildRequires:	zlib-devel
 %if %{with python3}
-BuildRequires:	python3 >= 1:3.7
+BuildRequires:	python3 >= 1:3.10
 BuildRequires:	python3-Cython >= 3.1.1
-BuildRequires:	python3-modules >= 1:3.7
+BuildRequires:	python3-modules >= 1:3.10
 BuildRequires:	python3-setuptools
 %endif
 %if %{with apidocs}
@@ -54,7 +59,7 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 # Libs rquire non-function grpc_core::ExecCtx::exec_ctx_ and grpc_core::ApplicationCallbackExecCtx::callback_exec_ctx_ symbols.
 # Wildcard '+' chars to workaround escape incompatibilities between rpm versions.
-%define		skip_post_check_so	libgrpc...so.* libgrpc.._channelz.so.* libgrpc.._reflection.so.* libgrpc.._unsecure.so.*
+%define		skip_post_check_so	libgrpc...so.* libgrpc.._channelz.so.* libgrpc.._reflection.so.* libgrpc.._unsecure.so.* libgrpcpp_otel_plugin.so.*
 
 %description
 gRPC is a modern, open source, high-performance remote procedure call
@@ -128,6 +133,7 @@ Dokumentacja API biblioteki Pythona gRPC.
 %setup -q
 %patch -P0 -p1
 %patch -P1 -p1
+%patch -P2 -p1
 
 %{__rm} doc/.gitignore
 
@@ -141,10 +147,14 @@ Dokumentacja API biblioteki Pythona gRPC.
 	-DgRPC_INSTALL_LIBDIR:PATH=%{_lib} \
 	-DgRPC_ABSL_PROVIDER=package \
 	-DgRPC_CARES_PROVIDER=package \
+	-DgRPC_OPENTELEMETRY_PROVIDER=package \
 	-DgRPC_PROTOBUF_PROVIDER=package \
 	-DgRPC_RE2_PROVIDER=package \
 	-DgRPC_SSL_PROVIDER=package \
 	-DgRPC_ZLIB_PROVIDER=package \
+%if %{with opentelemetry}
+	-DgRPC_BUILD_GRPCPP_OTEL_PLUGIN:BOOL=ON \
+%endif
 	-DgRPC_DOWNLOAD_ARCHIVES:BOOL=OFF \
 	-DgRPC_USE_SYSTEMD:BOOL=%{__ON_OFF systemd}
 
@@ -206,35 +216,39 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/grpc_python_plugin
 %attr(755,root,root) %{_bindir}/grpc_ruby_plugin
 %{_libdir}/libgpr.so.*.*.*
-%ghost %{_libdir}/libgpr.so.52
+%ghost %{_libdir}/libgpr.so.54
 %{_libdir}/libgrpc.so.*.*.*
-%ghost %{_libdir}/libgrpc.so.52
+%ghost %{_libdir}/libgrpc.so.54
 %{_libdir}/libgrpc_authorization_provider.so.*.*.*
-%ghost %{_libdir}/libgrpc_authorization_provider.so.1.78
+%ghost %{_libdir}/libgrpc_authorization_provider.so.1.81
 %{_libdir}/libgrpc_plugin_support.so.*.*.*
-%ghost %{_libdir}/libgrpc_plugin_support.so.1.78
+%ghost %{_libdir}/libgrpc_plugin_support.so.1.81
 %{_libdir}/libgrpc_unsecure.so.*.*.*
-%ghost %{_libdir}/libgrpc_unsecure.so.52
+%ghost %{_libdir}/libgrpc_unsecure.so.54
 %{_libdir}/libgrpc++.so.*.*.*
-%ghost %{_libdir}/libgrpc++.so.1.78
+%ghost %{_libdir}/libgrpc++.so.1.81
 %{_libdir}/libgrpc++_alts.so.*.*.*
-%ghost %{_libdir}/libgrpc++_alts.so.1.78
+%ghost %{_libdir}/libgrpc++_alts.so.1.81
 %{_libdir}/libgrpc++_error_details.so.*.*.*
-%ghost %{_libdir}/libgrpc++_error_details.so.1.78
+%ghost %{_libdir}/libgrpc++_error_details.so.1.81
 %{_libdir}/libgrpc++_reflection.so.*.*.*
-%ghost %{_libdir}/libgrpc++_reflection.so.1.78
+%ghost %{_libdir}/libgrpc++_reflection.so.1.81
 %{_libdir}/libgrpc++_unsecure.so.*.*.*
-%ghost %{_libdir}/libgrpc++_unsecure.so.1.78
+%ghost %{_libdir}/libgrpc++_unsecure.so.1.81
 %{_libdir}/libgrpcpp_channelz.so.*.*.*
-%ghost %{_libdir}/libgrpcpp_channelz.so.1.78
+%ghost %{_libdir}/libgrpcpp_channelz.so.1.81
+%if %{with opentelemetry}
+%{_libdir}/libgrpcpp_otel_plugin.so.*.*.*
+%ghost %{_libdir}/libgrpcpp_otel_plugin.so.1.81
+%endif
 # TODO: use system libs instead
 %{_libdir}/libaddress_sorting.so.*.*.*
-%ghost %{_libdir}/libaddress_sorting.so.52
+%ghost %{_libdir}/libaddress_sorting.so.54
 %{_libdir}/libupb_*.so.*.*.*
-%ghost %{_libdir}/libupb_*.so.52
+%ghost %{_libdir}/libupb_*.so.54
 # TODO: use system libs instead
 %{_libdir}/libutf8_range_lib.so.*.*.*
-%ghost %{_libdir}/libutf8_range_lib.so.52
+%ghost %{_libdir}/libutf8_range_lib.so.54
 %{_datadir}/grpc
 
 %files devel
@@ -250,6 +264,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libgrpc++_reflection.so
 %{_libdir}/libgrpc++_unsecure.so
 %{_libdir}/libgrpcpp_channelz.so
+%if %{with opentelemetry}
+%{_libdir}/libgrpcpp_otel_plugin.so
+%endif
 %{_libdir}/libaddress_sorting.so
 %{_libdir}/libupb_*.so
 %{_libdir}/libutf8_range_lib.so
@@ -262,7 +279,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_pkgconfigdir}/grpc_unsecure.pc
 %{_pkgconfigdir}/grpc++.pc
 %{_pkgconfigdir}/grpc++_unsecure.pc
+%if %{with opentelemetry}
 %{_pkgconfigdir}/grpcpp_otel_plugin.pc
+%endif
 
 %files apidocs
 %defattr(644,root,root,755)

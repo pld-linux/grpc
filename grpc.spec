@@ -22,21 +22,22 @@ Source1:	https://github.com/census-instrumentation/opencensus-proto/archive/v0.3
 # Source1-md5:	0b208800a68548cbf2d4bff763c050a2
 Patch0:		python-deps.patch
 Patch1:		%{name}-system-absl.patch
-Patch2:		%{name}-opentelemetry.patch
 URL:		https://grpc.io/
-BuildRequires:	abseil-cpp-devel >= 20220623
-BuildRequires:	c-ares-devel >= 1.13.0
+BuildRequires:	abseil-cpp-devel >= 20250512
+BuildRequires:	c-ares-devel >= 1.19.1
 BuildRequires:	cmake >= 3.16
 BuildRequires:	gcc >= 6:4.7
 BuildRequires:	libstdc++-devel >= 6:7
 BuildRequires:	openssl-devel
 %if %{with opentelemetry}
-BuildRequires:	opentelemetry-cpp-devel
+# bazel specifies 1.19, but 1.21 doesn't build without changes
+BuildRequires:	opentelemetry-cpp-devel >= 1.27
 %endif
 BuildRequires:	pkgconfig
-BuildRequires:	protobuf-devel >= 3.12
+# ? (bazel uses 6.33.5, builds fine with 5.29)
+BuildRequires:	protobuf-devel >= 4.25
 # with re2Config for cmake
-BuildRequires:	re2-devel >= 20200801
+BuildRequires:	re2-devel >= 20240702
 BuildRequires:	rpm-build >= 4.6
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.714
@@ -57,7 +58,7 @@ Requires:	cpuinfo(sse2)
 %{?with_systemd:Requires:	systemd-libs >= 1:233}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
-# Libs rquire non-function grpc_core::ExecCtx::exec_ctx_ and grpc_core::ApplicationCallbackExecCtx::callback_exec_ctx_ symbols.
+# Libs require non-function grpc_core::ExecCtx::exec_ctx_ and grpc_core::ApplicationCallbackExecCtx::callback_exec_ctx_ symbols.
 # Wildcard '+' chars to workaround escape incompatibilities between rpm versions.
 %define		skip_post_check_so	libgrpc...so.* libgrpc.._channelz.so.* libgrpc.._reflection.so.* libgrpc.._unsecure.so.* libgrpcpp_otel_plugin.so.*
 
@@ -78,8 +79,13 @@ Summary:	Header files for gRPC library
 Summary(pl.UTF-8):	Pliki nagłówkowe biblioteki gRPC
 Group:		Development/Libraries
 Requires:	%{name} = %{version}-%{release}
-Requires:	c-ares-devel >= 1.13.0
-Requires:	re2-devel >= 20200801
+Requires:	abseil-cpp-devel >= 20250512
+Requires:	c-ares-devel >= 1.19.1
+Requires:	openssl-devel
+%if %{with opentelemetry}
+Requires:	opentelemetry-cpp-devel >= 1.27
+%endif
+Requires:	re2-devel >= 20240702
 Requires:	zlib-devel
 
 %description devel
@@ -133,7 +139,6 @@ Dokumentacja API biblioteki Pythona gRPC.
 %setup -q
 %patch -P0 -p1
 %patch -P1 -p1
-%patch -P2 -p1
 
 %{__rm} doc/.gitignore
 
